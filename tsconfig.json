@@ -13,5 +13,5 @@
     "**/*.tsx",
     ".expo/types/**/*.ts",
     "expo-env.d.ts"
-  ]
+, "src/screens/LoginPage.jsx", "app/(tabs)/index.tsx", "src/navigation/AuthStack.jsx", "src/navigation/RootNavigation.jsx", "src/screens/SignUpPage.jsx"  ]
 }
