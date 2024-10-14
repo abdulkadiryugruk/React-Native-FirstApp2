@@ -1,14 +1,36 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import {getAuth, signInWithEmailAndPassword} from 'firebase/auth'
+
+
+// TODO login kismi
+export const login = createAsyncThunk('user/login', async({email, password}) =>{
+
+	try {
+		const auth = getAuth()
+		const userBilgileri = await signInWithEmailAndPassword(auth, email, password)
+
+		const user = userBilgileri.user
+		const token = user.stsTokenManager.accessToken
+
+		const userData ={
+			token,
+			user: user,
+		}
+		return userData
+	} catch (error) {
+		console.log('userSlice 21 line: ', error)
+		throw error			
+	}
+})
+
+
 
 const initialState={
-	email:null,
-	password:null,
 	isLoading:false,
 	isAuth: false,
-	users:{
-		userEmail: "test@test.com",
-		userPassword: "test",
-	}
+	token: null,
+	user:null,
+	error: null
 }
 
 export const UserSlice = createSlice({
@@ -25,18 +47,27 @@ reducers:{
 	setIsLoading : (state, action) => {
 		state.isLoading = action.payload
 	},
-	setLogin: (state) =>{
-		if(state.email === state.users.userEmail && state.password === state.users.userPassword){
-			state.isAuth = true	
-			console.log(true)
-		}else{
-			state.isAuth = false
-			console.log(false)
-
-		}
-	}
+},
+// TODO giris kismi
+extraReducers:(builder)=>{
+	builder
+	.addCase(login.pending, (state)=>{
+		state.isLoading= true;
+		state.isAuth= false
+	})
+	.addCase(login.fulfilled,(state, action)=>{
+		state.isLoading=false
+		state.isAuth= true
+		state.user = action.payload.user
+		state.token = action.payload.token
+	})
+	.addCase(login.rejected, (state, action)=>{
+		state.isLoading = false
+		state.isAuth = false
+		state.error = action.error.message
+	})
 }
 })
 
-export const {setEmail,setPassword,setIsLoading,setLogin} = UserSlice.actions
+export const {setEmail,setPassword,setIsLoading,} = UserSlice.actions
 export default UserSlice.reducer;
