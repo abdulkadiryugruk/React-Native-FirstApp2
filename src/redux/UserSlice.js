@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import {getAuth, signInWithEmailAndPassword} from 'firebase/auth'
+import {getAuth, signInWithEmailAndPassword} from 'firebase/auth';
+
 
 
 // TODO login kismi
