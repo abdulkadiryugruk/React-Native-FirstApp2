@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View, Image } from "react-native";
 
 import { Loading, CustomTextInput, CustomButton } from "../components/";
-import { login } from "../redux/UserSlice";
+import { login, autoLogin } from "../redux/UserSlice";
 
 import { useSelector, useDispatch } from "react-redux";
 import {setIsLoading, setLogin} from "../redux/UserSlice";
@@ -12,12 +12,20 @@ const LoginPage = ({ navigation }) => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
+
   // userSlice içerisindeki verilerin okunması
   const {isLoading, error,  } = useSelector((state) => state.user);
 
 
   // userSlice içerisindeki reducer yapılarını kullanma veya veri gönderme
   const dispatch = useDispatch();
+
+
+// kullanici daha once giris yaptiysa kontrol et ve oto giris yap
+useEffect(() => {
+  dispatch(autoLogin())
+}, [])
+
 
   return (
     <View style={styles.background}>
