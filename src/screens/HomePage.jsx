@@ -1,10 +1,12 @@
-import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { Pressable, StyleSheet, Text, TextInput, View, FlatList,SafeAreaView } from "react-native";
 import React, { useState, useEffect } from "react";
 import { collection, addDoc, getDocs, doc, deleteDoc, updateDoc  } from "firebase/firestore";
 import { db } from "@/firebaseConfig";
 import { CustomButton } from "../components";
 import { useDispatch } from "react-redux";
 import { logout } from "../redux/UserSlice";
+import  Animated, { FadeIn } from 'react-native-reanimated';
+import { FlipInEasyX, FlipOutEasyX } from 'react-native-reanimated';
 
 const HomePage = () => {
   const [data, setData] = useState([]);
@@ -88,8 +90,24 @@ dispatch(logout())
 }
 
 
+
+const renderItem = ({item, index})=>{
+  return(
+    <Animated.View 
+    style={styles.flatListView}
+    entering={FlipInEasyX.delay(100 * (index + 1))} 
+    exiting={FlipOutEasyX}
+    >
+      <Text>{item.id}</Text>
+      <Text>{item.title}</Text>
+      <Text>{item.content}</Text>
+      <Text>{item.lesson}</Text>
+    </Animated.View>
+  )
+}
+
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       
       <TextInput
       value={updateTheData}
@@ -98,20 +116,14 @@ dispatch(logout())
       style={{borderWidth:1, width:'50%', paddingVertical:10, textAlign:'center',marginBottom:30}}
       />
 
-      {data.map((value, index)=>{
-        return(
-      <Pressable key={index}
-      //TODO if you convert updateData to deleteData, deletion will occur when you click
-      onPress={() => [deleteData(value.id), setIsSaved(isSaved === false ? true : false)]}
-      >
-      <Text>{index}</Text>
-      <Text>{value.id}</Text>
-      <Text>{value.title}</Text>
-      <Text>{value.content}</Text>
-      <Text>{value.lesson}</Text>
-      </Pressable>
-        )
-      })}
+
+      <Animated.FlatList
+      entering={FadeIn}
+      data={data}
+      style={styles.flatList}
+      keyExtractor={item=>item.id}
+      renderItem={renderItem}
+      />
 
 
 
@@ -155,7 +167,7 @@ dispatch(logout())
         handleOnPress={handleLogouth}
       />
 
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -168,4 +180,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "teal",
   },
+  flatListView:{
+    borderWidth:1,
+    marginVertical:1,
+  },
+  flatList:{borderWidth:1,
+  width:'90%',
+  padding:10,
+  backgroundColor:'yellow'
+    }
 });
