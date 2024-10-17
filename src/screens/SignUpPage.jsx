@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { CustomTextInput, CustomButton } from "../components";
+import { CustomTextInput, CustomButton, Loading } from "../components";
 import {
   StyleSheet,
   Text,
@@ -8,11 +8,26 @@ import {
   Image,
   Pressable,
 } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
+import { register } from "../redux/UserSlice";
 
 const SignUpPage = ({navigation}) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const dispatch = useDispatch()
+
+  const {isLoading} = useSelector(state => state.user)
+
+  const handlerRegister = ()=>{
+    dispatch(register({email, password}))
+  }
+
+if(isLoading){
+  return <Loading/>
+}
+
   return (
     <SafeAreaView style={styles.container}>
         <View style={styles.title}>
@@ -51,7 +66,7 @@ const SignUpPage = ({navigation}) => {
           <CustomButton
             buttonText="Sign Up"
             setWidth="80%"
-            handleOnPress={() => console.log(name, " ", email, " ", password)}
+            handleOnPress={handlerRegister}
             buttonColor="blue"
             pressedButtonColor="grey"
           />
@@ -74,7 +89,7 @@ const styles = StyleSheet.create({
     width:'100%',
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "tomato",
+    backgroundColor: "teal",
     
     
   },
