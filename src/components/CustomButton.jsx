@@ -1,7 +1,7 @@
 import { StyleSheet, Text, Pressable } from 'react-native'
 import React from 'react'
 
-const CustomButton = ({buttonText, setWidth, handleOnPress, buttonColor, pressedButtonColor}) => {
+const CustomButton = ({buttonText, flexValue, handleOnPress, buttonColor, pressedButtonColor}) => {
 
 
   
@@ -11,7 +11,7 @@ const CustomButton = ({buttonText, setWidth, handleOnPress, buttonColor, pressed
         style={({ pressed }) => [
           {
             backgroundColor: pressed ? pressedButtonColor : buttonColor,
-        width: setWidth,
+        flex: flexValue,
 
           },
           
@@ -31,7 +31,6 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         alignItems: "center",
         justifyContent: "center",
-        marginTop: 25,
       },
       buttonText: {
         color: "white",
